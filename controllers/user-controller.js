@@ -48,15 +48,17 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res, next) => {
+    const user = req.user
     const userParamsId = Number(req.params.id)
     return User.findByPk(userParamsId, {
       include: [{ model: Comment, include: Restaurant }]
     })
-      .then(user => {
-        user = user.toJSON()
-        user.commentedRestaurants =
-          user.Comments &&
-          user.Comments.reduce((accumulate, comment) => {
+      .then(queryUser => {
+        if (!queryUser) throw new Error('User is not applied !')
+        queryUser = queryUser.toJSON()
+        queryUser.commentedRestaurants =
+          queryUser.Comments &&
+          queryUser.Comments.reduce((accumulate, comment) => {
             if (
               !accumulate.some(
                 restaurant => restaurant.id === comment.restaurantId
@@ -66,8 +68,9 @@ const userController = {
             }
             return accumulate
           }, [])
-        if (!user) throw new Error('User is not applied !')
-        res.render('users/profile', { user })
+        queryUser.owner = Number(user.id) === userParamsId || false
+        console.log(queryUser)
+        res.render('users/profile', { user, queryUser })
       })
       .catch(err => next(err))
   },
@@ -182,22 +185,20 @@ const userController = {
       .catch(err => next(err))
   },
   getTopUsers: (req, res, next) => {
-    return (
-      User.findAll({
-        include: [{ model: User, as: 'Followers' }]
+    return User.findAll({
+      include: [{ model: User, as: 'Followers' }]
+    })
+      .then(users => {
+        const result = users
+          .map(user => ({
+            ...user.toJSON(),
+            followerCount: user.Followers.length,
+            isFollowed: req.user.Followings.some(f => f.id === user.id)
+          }))
+          .sort((a, b) => b.followerCount - a.followerCount)
+        res.render('top-users', { users: result })
       })
-        .then(users => {
-          const result = users
-            .map(user => ({
-              ...user.toJSON(),
-              followerCount: user.Followers.length,
-              isFollowed: req.user.Followings.some(f => f.id === user.id)
-            }))
-            .sort((a, b) => b.followerCount - a.followerCount)
-          res.render('top-users', { users: result })
-        })
-        .catch(err => next(err))
-    )
+      .catch(err => next(err))
   },
   addFollowing: (req, res, next) => {
     const { userId } = req.params
