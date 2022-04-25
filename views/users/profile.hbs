@@ -19,7 +19,7 @@
         href='/users/{{queryUser.id}}/edit'
       >edit</a>
     {{else}}
-      {{#if this.isFollowed}}
+      {{#if queryUser.isFollowed}}
         <form
           action='/following/{{queryUser.id}}?_method=DELETE'
           method='POST'
@@ -48,7 +48,7 @@
       </div>
       <div class='card-body'>
         {{#each queryUser.Followings}}
-          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+          <a href='/users/{{this.id}}' class='text-decoration-none'>
             <img
               src={{this.image}}
               width='60'
@@ -68,7 +68,7 @@
       </div>
       <div class='card-body'>
         {{#each queryUser.Followers}}
-          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+          <a href='/users/{{this.id}}' class='text-decoration-none'>
             <img
               src={{this.image}}
               width='60'

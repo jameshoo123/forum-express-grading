@@ -11,7 +11,9 @@ module.exports = {
           password: await bcrypt.hash('12345678', 10),
           is_admin: true, // 注意這裏因爲是直接將資料寫入 database ！所以一定要加 _ 底綫
           name: 'root',
-          image: 'https://thispersondoesnotexist.com/image',
+          image: `https://loremflickr.com/g/320/240/cartoon/?random=${
+            Math.random() * 100
+          }`,
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -20,7 +22,9 @@ module.exports = {
           password: await bcrypt.hash('12345678', 10),
           is_admin: false,
           name: 'user1',
-          image: 'https://thispersondoesnotexist.com/image',
+          image: `https://loremflickr.com/g/320/240/cartoon/?random=${
+            Math.random() * 100
+          }`,
           created_at: new Date(),
           updated_at: new Date()
         },
@@ -29,7 +33,9 @@ module.exports = {
           password: await bcrypt.hash('12345678', 10),
           is_admin: false,
           name: 'user2',
-          image: 'https://thispersondoesnotexist.com/image',
+          image: `https://loremflickr.com/g/320/240/cartoon/?random=${
+            Math.random() * 100
+          }`,
           created_at: new Date(),
           updated_at: new Date()
         }
