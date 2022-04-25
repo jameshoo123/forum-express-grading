@@ -51,7 +51,12 @@ const userController = {
     const user = req.user
     const userParamsId = Number(req.params.id)
     return User.findByPk(userParamsId, {
-      include: [{ model: Comment, include: Restaurant }]
+      include: [
+        { model: Comment, include: Restaurant },
+        { model: Restaurant, as: 'FavoritedRestaurants' },
+        { model: User, as: 'Followers' },
+        { model: User, as: 'Followings' }
+      ]
     })
       .then(queryUser => {
         if (!queryUser) throw new Error('User is not applied !')
@@ -69,7 +74,6 @@ const userController = {
             return accumulate
           }, [])
         queryUser.owner = Number(user.id) === userParamsId || false
-        console.log(queryUser)
         res.render('users/profile', { user, queryUser })
       })
       .catch(err => next(err))

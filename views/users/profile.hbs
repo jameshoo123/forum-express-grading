@@ -10,29 +10,118 @@
   <div class='col-md-8'>
     <h1>{{queryUser.name}}</h1>
     <h2>{{queryUser.email}}</h2>
+    <h5>{{queryUser.commentedRestaurants.length}} 已評論餐廳</h5>
+    <h5>{{queryUser.FavoritedRestaurants.length}} 已收藏餐廳</h5>
+    <h5>{{queryUser.Followings.length}} Followings</h5>
+    <h5>{{queryUser.Followers.length}} Followers</h5>
     {{#if queryUser.owner}}<a
         class='btn btn-primary'
         href='/users/{{queryUser.id}}/edit'
-      >edit</a>{{/if}}
+      >edit</a>
+    {{else}}
+      {{#if this.isFollowed}}
+        <form
+          action='/following/{{queryUser.id}}?_method=DELETE'
+          method='POST'
+          style='display: contents;'
+        >
+          <button type='submit' class='btn btn-danger'>取消追蹤</button>
+        </form>
+      {{else}}
+        <form
+          action='/following/{{queryUser.id}}'
+          method='POST'
+          style='display: contents;'
+        >
+          <button type='submit' class='btn btn-primary'>追蹤</button>
+        </form>
+      {{/if}}
+    {{/if}}
   </div>
 </div>
-<div class='card'>
-  <div class='card-header'>
-    <strong>{{queryUser.commentedRestaurants.length}}</strong>
-    已評論餐廳
+<div class='row g-4'>
+  <div class='col-4'>
+    <div class='card mb-3'>
+      <div class='card-header'>
+        <strong>{{queryUser.Followings.length}}</strong>
+        Followings
+      </div>
+      <div class='card-body'>
+        {{#each queryUser.Followings}}
+          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+            <img
+              src={{this.image}}
+              width='60'
+              height='60'
+              class='avatar'
+              style='transition: opacity 0.5s; opacity:0;'
+              onload='this.style.opacity=1;'
+            />
+          </a>
+        {{/each}}
+      </div>
+    </div>
+    <div class='card mb-3'>
+      <div class='card-header'>
+        <strong>{{queryUser.Followers.length}}</strong>
+        Followers
+      </div>
+      <div class='card-body'>
+        {{#each queryUser.Followers}}
+          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+            <img
+              src={{this.image}}
+              width='60'
+              height='60'
+              class='avatar'
+              style='transition: opacity 0.5s; opacity:0;'
+              onload='this.style.opacity=1;'
+            />
+          </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
-  <div class='card-body'>
-    {{#each queryUser.commentedRestaurants}}
-      <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
-        <img
-          src={{this.image}}
-          width='60'
-          height='60'
-          class='avatar'
-          style='transition: opacity 0.5s; opacity:0;'
-          onload='this.style.opacity=1;'
-        />
-      </a>
-    {{/each}}
+  <div class='col-8'>
+    <div class='card mb-3'>
+      <div class='card-header'>
+        <strong>{{queryUser.commentedRestaurants.length}}</strong>
+        已評論餐廳
+      </div>
+      <div class='card-body'>
+        {{#each queryUser.commentedRestaurants}}
+          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+            <img
+              src={{this.image}}
+              width='60'
+              height='60'
+              class='avatar'
+              style='transition: opacity 0.5s; opacity:0;'
+              onload='this.style.opacity=1;'
+            />
+          </a>
+        {{/each}}
+      </div>
+    </div>
+    <div class='card mb-3'>
+      <div class='card-header'>
+        <strong>{{queryUser.FavoritedRestaurants.length}}</strong>
+        已收藏的餐廳
+      </div>
+      <div class='card-body'>
+        {{#each queryUser.FavoritedRestaurants}}
+          <a href='/restaurants/{{this.id}}' class='text-decoration-none'>
+            <img
+              src={{this.image}}
+              width='60'
+              height='60'
+              class='avatar'
+              style='transition: opacity 0.5s; opacity:0;'
+              onload='this.style.opacity=1;'
+            />
+          </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
 </div>
