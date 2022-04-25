@@ -192,6 +192,7 @@ const userController = {
       .catch(err => next(err))
   },
   getTopUsers: (req, res, next) => {
+    const userId = Number(req.user.id)
     return User.findAll({
       include: [{ model: User, as: 'Followers' }],
     })
@@ -201,6 +202,7 @@ const userController = {
             ...user.toJSON(),
             followerCount: user.Followers.length,
             isFollowed: req.user.Followings.some(f => f.id === user.id),
+            owner: Number(user.id) !== userId,
           }))
           .sort((a, b) => b.followerCount - a.followerCount)
         res.render('top-users', { users: result })
